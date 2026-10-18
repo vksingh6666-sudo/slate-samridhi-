@@ -6,412 +6,226 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <meta name="theme-color" content="#1565c0">
 <title>मेरी डिजिटल स्लेट</title>
-
 <style>
-* {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-}
-
-html, body {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  font-family: Arial, sans-serif;
-  background: #eaf0f7;
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-}
-
-header {
-  background: #1565c0;
-  color: white;
-  text-align: center;
-  padding: 12px 8px;
-  font-size: 21px;
-  font-weight: bold;
-  flex-shrink: 0;
-}
-
-.toolbar {
-  padding: 10px;
-  background: white;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  box-shadow: 0 2px 5px #0002;
-  flex-shrink: 0;
-}
-
-button, .color-label {
-  border: 1px solid #cbd5e1;
-  background: #f8fafc;
-  color: #172033;
-  border-radius: 9px;
-  min-height: 42px;
-  padding: 9px 12px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-button.active {
-  background: #1565c0;
-  color: white;
-  border-color: #1565c0;
-}
-
-button:active {
-  transform: scale(.97);
-}
-
-.color-label {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-input[type="color"] {
-  width: 31px;
-  height: 30px;
-  border: 0;
-  padding: 0;
-  background: transparent;
-}
-
-.size-box {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 13px;
-  color: #334155;
-}
-
-input[type="range"] {
-  width: 95px;
-  accent-color: #1565c0;
-}
-
-#sizeValue {
-  min-width: 18px;
-  font-weight: bold;
-}
-
-#board {
-  flex: 1;
-  min-height: 0;
-  padding: 8px;
-  display: flex;
-}
-
-.canvas-wrap {
-  flex: 1;
-  min-width: 0;
-  min-height: 0;
-  background: white;
-  border: 2px solid #cbd5e1;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 2px 8px #0001;
-}
-
-canvas {
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: white;
-  touch-action: none;
-  cursor: crosshair;
-}
-
-footer {
-  flex-shrink: 0;
-  background: white;
-  color: #64748b;
-  text-align: center;
-  padding: 7px;
-  font-size: 12px;
-}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif;background:#edf2f7}
+body{display:flex;flex-direction:column}
+header{background:#1565c0;color:white;text-align:center;padding:12px 5px;font-size:21px;font-weight:bold;flex-shrink:0}
+.toolbar{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:7px;padding:9px;background:white;box-shadow:0 2px 5px #0002;flex-shrink:0}
+button{border:1px solid #cbd5e1;background:#f8fafc;color:#172033;border-radius:9px;min-height:42px;padding:9px 11px;font-size:14px;font-weight:bold}
+button.active{background:#1565c0;color:white;border-color:#1565c0}
+button:active{transform:scale(.97)}
+.colorbox,.sizebox{display:flex;align-items:center;gap:5px;font-size:13px}
+input[type=color]{width:34px;height:32px;border:0;padding:0;background:transparent}
+input[type=range]{width:80px;accent-color:#1565c0}
+#board{flex:1;min-height:0;padding:7px;display:flex}
+#paper{flex:1;min-height:0;min-width:0;background:white;border:2px solid #cbd5e1;border-radius:10px;overflow:hidden}
+canvas{width:100%;height:100%;display:block;touch-action:none}
+footer{flex-shrink:0;background:white;color:#64748b;text-align:center;font-size:12px;padding:7px}
 </style>
 </head>
-
 <body>
-
 <header>✍️ मेरी डिजिटल स्लेट</header>
 
 <div class="toolbar">
-  <button id="penBtn" class="active">✏️ लिखें</button>
-  <button id="eraserBtn">🧽 मिटाएँ</button>
+  <button id="finger" class="active">☝️ उंगली</button>
+  <button id="pen">🖊️ पेन</button>
+  <button id="eraser">🧽 इरेज़र</button>
 
-  <label class="color-label">
-    🎨 रंग
-    <input id="colorPicker" type="color" value="#111111">
+  <label class="colorbox">🎨 रंग
+    <input type="color" id="color" value="#111111">
   </label>
 
-  <div class="size-box">
-    मोटाई
-    <input id="brushSize" type="range"
-           min="1" max="35" value="4">
-    <span id="sizeValue">4</span>
-  </div>
+  <label class="sizebox">मोटाई
+    <input type="range" id="size" min="1" max="35" value="4">
+    <span id="sizeNum">4</span>
+  </label>
 
-  <button id="undoBtn">↩️ वापस</button>
-  <button id="clearBtn">🗑️ साफ</button>
-  <button id="saveBtn">💾 PNG सेव</button>
+  <button id="undo">↩️ Undo</button>
+  <button id="clear">🗑️ साफ</button>
+  <button id="save">💾 PNG सेव</button>
 </div>
 
 <main id="board">
-  <div class="canvas-wrap">
-    <canvas id="slate"></canvas>
-  </div>
+  <div id="paper"><canvas id="canvas"></canvas></div>
 </main>
-
-<footer>
-  उंगली से लिखें • मिटाएँ • PNG में सेव करें
-</footer>
+<footer>उंगली या टच पेन से लिखें • इरेज़र से मिटाएँ • PNG सेव करें</footer>
 
 <script>
-const canvas = document.getElementById("slate");
-const ctx = canvas.getContext("2d");
+const canvas=document.getElementById("canvas");
+const ctx=canvas.getContext("2d");
+const $=id=>document.getElementById(id);
 
-const penBtn = document.getElementById("penBtn");
-const eraserBtn = document.getElementById("eraserBtn");
-const colorPicker = document.getElementById("colorPicker");
-const brushSize = document.getElementById("brushSize");
-const sizeValue = document.getElementById("sizeValue");
-const clearBtn = document.getElementById("clearBtn");
-const saveBtn = document.getElementById("saveBtn");
-const undoBtn = document.getElementById("undoBtn");
+let mode="finger";
+let drawing=false;
+let current=null;
+let strokes=[];
+let dpr=1;
 
-let mode = "pen";
-let drawing = false;
-let lastX = 0;
-let lastY = 0;
-let strokes = [];
-let currentStroke = null;
-let savedSnapshot = null;
-let dpr = 1;
-
-function getPoint(event) {
-  const rect = canvas.getBoundingClientRect();
-
-  return {
-    x: event.clientX - rect.left,
-    y: event.clientY - rect.top
-  };
+function setMode(m){
+  mode=m;
+  ["finger","pen","eraser"].forEach(id=>{
+    $(id).classList.toggle("active",id===m);
+  });
 }
 
-function resizeCanvas() {
-  const oldCanvas = document.createElement("canvas");
+$("finger").onclick=()=>setMode("finger");
+$("pen").onclick=()=>setMode("pen");
+$("eraser").onclick=()=>setMode("eraser");
 
-  if (canvas.width && canvas.height) {
-    oldCanvas.width = canvas.width;
-    oldCanvas.height = canvas.height;
-    oldCanvas.getContext("2d").drawImage(canvas, 0, 0);
+$("size").oninput=()=>{$("sizeNum").textContent=$("size").value};
+
+function point(e){
+  const r=canvas.getBoundingClientRect();
+  return {x:e.clientX-r.left,y:e.clientY-r.top};
+}
+
+function resize(){
+  const old=document.createElement("canvas");
+  old.width=canvas.width;
+  old.height=canvas.height;
+  if(old.width && old.height){
+    old.getContext("2d").drawImage(canvas,0,0);
   }
 
-  const rect = canvas.getBoundingClientRect();
-  if (!rect.width || !rect.height) return;
+  const r=canvas.getBoundingClientRect();
+  if(!r.width||!r.height)return;
 
-  dpr = Math.min(window.devicePixelRatio || 1, 3);
+  dpr=Math.min(window.devicePixelRatio||1,3);
+  canvas.width=Math.round(r.width*dpr);
+  canvas.height=Math.round(r.height*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.fillStyle="#fff";
+  ctx.fillRect(0,0,r.width,r.height);
 
-  canvas.width = Math.round(rect.width * dpr);
-  canvas.height = Math.round(rect.height * dpr);
-
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, rect.width, rect.height);
-
-  if (oldCanvas.width && oldCanvas.height) {
-    ctx.drawImage(
-      oldCanvas,
-      0, 0, oldCanvas.width, oldCanvas.height,
-      0, 0, rect.width, rect.height
-    );
+  if(old.width&&old.height){
+    ctx.drawImage(old,0,0,old.width,old.height,0,0,r.width,r.height);
   }
 }
 
-function drawStroke(stroke) {
-  if (!stroke || stroke.points.length === 0) return;
-
+function drawStroke(s){
+  if(!s||!s.points.length)return;
   ctx.save();
-  ctx.beginPath();
-  ctx.lineCap = "round";
-  ctx.lineJoin = "round";
-  ctx.strokeStyle = stroke.color;
-  ctx.lineWidth = stroke.size;
+  ctx.strokeStyle=s.color;
+  ctx.fillStyle=s.color;
+  ctx.lineWidth=s.width;
+  ctx.lineCap="round";
+  ctx.lineJoin="round";
 
-  const points = stroke.points;
-
-  if (points.length === 1) {
-    ctx.fillStyle = stroke.color;
-    ctx.arc(points[0].x, points[0].y,
-            stroke.size / 2, 0, Math.PI * 2);
+  const p=s.points;
+  if(p.length===1){
+    ctx.beginPath();
+    ctx.arc(p[0].x,p[0].y,s.width/2,0,Math.PI*2);
     ctx.fill();
-  } else {
-    ctx.moveTo(points[0].x, points[0].y);
-
-    for (let i = 1; i < points.length; i++) {
-      ctx.lineTo(points[i].x, points[i].y);
+  }else{
+    ctx.beginPath();
+    ctx.moveTo(p[0].x,p[0].y);
+    for(let i=1;i<p.length;i++){
+      ctx.lineTo(p[i].x,p[i].y);
     }
-
     ctx.stroke();
   }
-
   ctx.restore();
 }
 
-function redraw() {
-  const rect = canvas.getBoundingClientRect();
-
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, rect.width, rect.height);
-
+function redraw(){
+  const r=canvas.getBoundingClientRect();
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.fillStyle="#fff";
+  ctx.fillRect(0,0,r.width,r.height);
   strokes.forEach(drawStroke);
-  if (currentStroke) drawStroke(currentStroke);
+  if(current)drawStroke(current);
 }
 
-function setMode(nextMode) {
-  mode = nextMode;
+canvas.addEventListener("pointerdown",e=>{
+  if(e.pointerType==="mouse"&&e.button!==0)return;
+  e.preventDefault();
+  drawing=true;
+  const p=point(e);
 
-  penBtn.classList.toggle("active", mode === "pen");
-  eraserBtn.classList.toggle("active", mode === "eraser");
-
-  canvas.style.cursor =
-    mode === "pen" ? "crosshair" : "cell";
-}
-
-penBtn.addEventListener("click", () => setMode("pen"));
-eraserBtn.addEventListener("click", () => setMode("eraser"));
-
-brushSize.addEventListener("input", () => {
-  sizeValue.textContent = brushSize.value;
-});
-
-canvas.addEventListener("pointerdown", event => {
-  if (event.pointerType === "mouse" && event.button !== 0) return;
-
-  event.preventDefault();
-  drawing = true;
-
-  const point = getPoint(event);
-  lastX = point.x;
-  lastY = point.y;
-
-  currentStroke = {
-    color: mode === "eraser" ? "#ffffff" : colorPicker.value,
-    size: mode === "eraser"
-      ? Math.max(18, Number(brushSize.value) * 3)
-      : Number(brushSize.value),
-    points: [point]
+  // Finger and Pen are separate user-selectable modes.
+  current={
+    mode:mode,
+    color:mode==="eraser"?"#ffffff":$("color").value,
+    width:mode==="eraser"
+      ?Math.max(18,Number($("size").value)*3)
+      :Number($("size").value),
+    points:[p]
   };
 
-  try {
-    canvas.setPointerCapture(event.pointerId);
-  } catch (e) {}
-
+  try{canvas.setPointerCapture(e.pointerId)}catch(err){}
   redraw();
 });
 
-canvas.addEventListener("pointermove", event => {
-  if (!drawing || !currentStroke) return;
+canvas.addEventListener("pointermove",e=>{
+  if(!drawing||!current)return;
+  e.preventDefault();
+  const p=point(e);
+  const points=current.points;
+  const prev=points[points.length-1];
+  points.push(p);
 
-  event.preventDefault();
-
-  const point = getPoint(event);
-  currentStroke.points.push(point);
-
-  // केवल नए हिस्से को तुरंत खींचें
   ctx.beginPath();
-  ctx.lineCap = "round";
-  ctx.lineJoin = "round";
-  ctx.strokeStyle = currentStroke.color;
-  ctx.lineWidth = currentStroke.size;
-  ctx.moveTo(lastX, lastY);
-  ctx.lineTo(point.x, point.y);
+  ctx.strokeStyle=current.color;
+  ctx.lineWidth=current.width;
+  ctx.lineCap="round";
+  ctx.lineJoin="round";
+  ctx.moveTo(prev.x,prev.y);
+  ctx.lineTo(p.x,p.y);
   ctx.stroke();
-
-  lastX = point.x;
-  lastY = point.y;
 });
 
-function stopDrawing() {
-  if (!drawing) return;
-
-  drawing = false;
-
-  if (currentStroke) {
-    strokes.push(currentStroke);
-    currentStroke = null;
-  }
+function finish(){
+  if(!drawing)return;
+  drawing=false;
+  if(current)strokes.push(current);
+  current=null;
 }
+canvas.addEventListener("pointerup",finish);
+canvas.addEventListener("pointercancel",finish);
+canvas.addEventListener("lostpointercapture",finish);
 
-canvas.addEventListener("pointerup", stopDrawing);
-canvas.addEventListener("pointercancel", stopDrawing);
-canvas.addEventListener("lostpointercapture", stopDrawing);
-
-undoBtn.addEventListener("click", () => {
-  if (drawing) stopDrawing();
+$("undo").onclick=()=>{
+  finish();
   strokes.pop();
   redraw();
-});
+};
 
-clearBtn.addEventListener("click", () => {
-  if (!confirm("क्या आप पूरी स्लेट साफ करना चाहते हैं?")) return;
-
-  drawing = false;
-  currentStroke = null;
-  strokes = [];
+$("clear").onclick=()=>{
+  if(!confirm("पूरी स्लेट साफ करें?"))return;
+  drawing=false;
+  current=null;
+  strokes=[];
   redraw();
+};
+
+$("save").onclick=()=>{
+  finish();
+  const out=document.createElement("canvas");
+  out.width=canvas.width;
+  out.height=canvas.height;
+  const c=out.getContext("2d");
+  c.fillStyle="#fff";
+  c.fillRect(0,0,out.width,out.height);
+  c.drawImage(canvas,0,0);
+
+  out.toBlob(blob=>{
+    if(!blob){alert("सेव नहीं हो सका।");return}
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement("a");
+    a.href=url;
+    a.download="meri-digital-slate.png";
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(url),2000);
+  },"image/png");
+};
+
+let timer;
+window.addEventListener("resize",()=>{
+  clearTimeout(timer);
+  timer=setTimeout(resize,150);
 });
-
-saveBtn.addEventListener("click", () => {
-  if (drawing) stopDrawing();
-
-  // सफेद पृष्ठभूमि के साथ PNG तैयार करें
-  const output = document.createElement("canvas");
-  output.width = canvas.width;
-  output.height = canvas.height;
-
-  const outCtx = output.getContext("2d");
-  outCtx.fillStyle = "#ffffff";
-  outCtx.fillRect(0, 0, output.width, output.height);
-  outCtx.drawImage(canvas, 0, 0);
-
-  output.toBlob(blob => {
-    if (!blob) {
-      alert("इमेज सेव नहीं हो सकी। दोबारा प्रयास करें।");
-      return;
-    }
-
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = "meri-digital-slate.png";
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
-    setTimeout(() => URL.revokeObjectURL(url), 3000);
-  }, "image/png");
-});
-
-// स्क्रीन का आकार बदलने पर स्लेट की लिखाई सुरक्षित रखें
-let resizeTimer;
-window.addEventListener("resize", () => {
-  clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(resizeCanvas, 150);
-});
-
-resizeCanvas();
+resize();
 </script>
-
 </body>
 </html>
